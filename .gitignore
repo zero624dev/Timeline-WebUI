@@ -1,0 +1,18 @@
+# ignore everything
+*
+
+# keep these control files so repo still works remotely
+!.gitignore
+
+# whitelist dist folder and everything inside
+!dist/
+!dist/**
+!package.json
+
+# whitelist Dockerfile
+!Dockerfile
+
+# keep GitHub Actions (if you need deploy workflow)
+!.github/
+!.github/workflows/
+!.github/workflows/deploy.yml
