@@ -15,5 +15,5 @@ COPY . .
 
 # 포트와 실행 커맨드 (환경변수 PORT 사용)
 EXPOSE 5000
-RUN bun run start
-# CMD ["bun", "server/index.ts"]
+# start should run at container runtime (CMD), not at build time (RUN)
+CMD ["bun", "run", "start"]
