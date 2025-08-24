@@ -1,5 +1,5 @@
 # Use Bun official image
-FROM jarredsumner/bun:latest
+FROM oven/bun:latest
 
 WORKDIR /app
 # copy package manifest first for caching (if 있음)
@@ -17,3 +17,4 @@ COPY . .
 EXPOSE 5000
 # start should run at container runtime (CMD), not at build time (RUN)
 CMD ["bun", "run", "start"]
+
