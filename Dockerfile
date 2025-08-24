@@ -3,7 +3,7 @@ FROM oven/bun:latest
 
 WORKDIR /app
 # copy package manifest first for caching (if 있음)
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 # install deps (bun will create bun.lockb inside the image)
 RUN bun install --production=false
 
@@ -17,3 +17,4 @@ COPY . .
 EXPOSE 5000
 # start should run at container runtime (CMD), not at build time (RUN)
 CMD ["bun", "run", "start"]
+
