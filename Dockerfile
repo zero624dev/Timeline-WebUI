@@ -1,21 +1,34 @@
-# Use Bun official image
-FROM oven/bun:latest
+## Multi-stage Dockerfile for TimeFlow
+## 1) Build stage: install deps and run `bun run build` to populate `dist/`.
+## 2) Runtime stage: copy only `dist/` and run the bundled server.
 
+FROM oven/bun:latest AS builder
 WORKDIR /app
-# copy package manifest first for caching (if 있음)
+# Copy package manifests first to leverage Docker layer cache
 COPY package.json ./
-# install deps (bun will create bun.lockb inside the image)
+COPY bun.lock* ./ || true
+
+# Install dependencies (including dev deps required for build)
 RUN bun install
 
-# copy rest of project
+# Copy the rest of the repo and run the build step which produces `dist/`
 COPY . .
+RUN bun run build
 
-# 빌드(필요하면)
-# RUN bun run build
+## Runtime image: keep only the built artifacts
+FROM oven/bun:latest AS runner
+WORKDIR /app
 
-# 포트와 실행 커맨드 (환경변수 PORT 사용)
+# Copy built server bundle and client assets
+COPY --from=builder /app/dist ./dist
+
+# Optional: copy package.json for metadata (not strictly required)
+COPY package.json ./
+
+ENV NODE_ENV=production
 EXPOSE 5000
-# start should run at container runtime (CMD), not at build time (RUN)
+
+# Run the built server bundle
 CMD ["bun", "dist/index.js"]
 
 
